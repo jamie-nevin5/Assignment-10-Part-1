@@ -90,7 +90,7 @@ print(response) #prints the answer to the above code
 
 #When you run this code successfully, you may just get a print out of your API token. 
 #That still means it connected successfully! Any other error indicates it was unsucessful. 
-#do not see any errors but do not see 200. Keeps coming up as 401. 
+
  
 ```
 
