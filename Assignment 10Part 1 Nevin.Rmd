@@ -1,0 +1,134 @@
+---
+title: "Assignment 10 part 1 Nevin"
+output: html_document
+date: "2024-04-15"
+---
+
+```{# Assignment #10 - Data Gathering and Warehousing - DSSA-5102
+
+Instructor: Melissa Laurino</br>
+Spring 2024</br>
+
+Name: Jamie
+
+Date: 
+
+**At this time in the semester:** <br>
+--We have explored a dataset. <br>
+--We have cleaned our dataset. <br>
+--We created a Github account with a repository for this class and included a Metadata file about our data. <br>
+--We introduced general and more advanced SQL syntax, queries, and applications in R.<br>
+--Created our own database from scratch in R using libraries RMariaDB and RSQLite <br>
+--Populated our databases we created from scratch<br>
+--Created a visual enhanced entity relationship diagram for our database
+<br>
+
+**Objective**: Connect to a website using an API. Gather live data from a website using an API.<br>
+**If you would like to conntect to a different social media platform that you use instead of INaturalist, that is totally fine as long as you commnet/explain your thought process!**<br>
+<br>
+**iNaturalist**: iNaturalist is a community of citizen scientists that encourages accurate data collection and species identification of the natural world. 
+<br>
+No observations of captive plants or animals should be included in the iNaturalist data. Research grade observaitons have been verified by the community in terms of species ID, location, etc. Research grade observations have been verified by the community of experts in that field. 
+<br>
+API's are useful to bridge the gap between manually querying and downloading data, and then uploading them into R/Python, by just working with the live data directly in your platform of choice.
+
+Follow the instructions below to complete the assignment. Answer any questions in markdown cell boxes. Be sure to comment all code.
+```
+
+
+```{r}
+#install.packages("spocc", dependencies = TRUE)
+#install.packages("rinat")
+#install.packages("iNatTools") #Outdated, however, reference documents are still helpful to review.
+#install.packages("iNat-API") #Outdated, however, reference documents are still helpful to review. 
+```
+
+```
+```{r}
+#Working with json data files generated from the API:
+#install.packages("httr") #to work with the urls 
+#install.packages("jsonlite") #to work with JSON data
+#install.packages("tidyverse") #a good base package that does a lot
+library("tidyverse") #Who doesn't need tidyverse?
+library("httr") #Working with URLs/HTTPS
+library("jsonlite") #Working with the iNaturalist API data resposne
+```
+
+## Accessing iNaturalist data via API from scratch:
+
+***Obtaining an iNaturalist API token:***<br>
+Create a username and password and **log in** to www.inaturalist.org using those credentials.<br>
+In the same browser, obtain your INaturalist API Token by using this link: https://www.inaturalist.org/users/api_token<br>
+Do not click this link more than once or it will regenerate your token!<br>
+With iNaturalist, this token is <b>ONLY<b> valid for 24hrs.
+```{r}
+#Enter your generated API token here:
+api_token <- 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjo3OTc5MDMyLCJleHAiOjE3MTMyMzcwNTF9.1IKIHT1TuyjwesLpLnMAsKhJS2umzafF5ZqccFDFyLMQ20fE6jZ9L44CUnNhlSFK6ET1RRPA5jDBw8WS-dV8nA'
+
+#Define the iNaturalist API endpoint. This is defined by www.inaturalist.org.
+inat_api_url <- "https://api.inaturalist.org/v1"
+```
+
+```{r}
+#Set the API token in the HTTP headers
+#In API requests, the Authorization header is commonly used to include authentication credentials.
+#Bearer's rely on obtained tokens and are more secure than using passwords.
+headers <- add_headers(Authorization = paste("Bearer",api_token))
+                       
+#Test the connection by retrieving your user information
+response <- GET(url = paste0(inat_api_url, "/users/me"), headers = headers)
+
+print(response) #prints the answer to the above code
+
+#Check if the API request was successful
+#200 = A successful request
+#If it is equal to 200, parse/create an R object named user_info
+
+  
+
+
+
+#When you run this code successfully, you may just get a print out of your API token. 
+#That still means it connected successfully! Any other error indicates it was unsucessful. 
+#do not see any errors but do not see 200. Keeps coming up as 401. 
+ 
+```
+
+```{r}
+#Another function to double check API status - we can never be too sure! 
+#double checks the status and has it print error:empty response if it failed or that it is online and accessaible if it works
+check_api_status <- function(response) {
+  if (is.null(response)) {
+    return("Error: Empty response")
+  } else {
+    if (http_status(response)$status == 200) {
+      return("API is online and accessible")
+    } else {
+      return(paste("API Error:", http_status(response)$reason))
+    }
+  }
+}
+#sets it to headers
+headers <- add_headers(Authorization = paste("Bearer", api_token))
+#retrieves user information
+response <- GET(url = paste0(inat_api_url, "/users/me"), headers = headers)
+#Print the response to ensure you are connected:
+print(response)
+
+#checks the status and prints it
+api_status <- check_api_status(response)
+print(api_status)
+
+
+#The response printed is the Date, Status, Content-Type and Size.
+#The content-type is json that may have to be converted later on depending on how we use the data
+```
+
+```{r}
+
+
+
+
+
+```
+
